@@ -27,7 +27,7 @@ function refprop_init(fluid::String)
     ierr = Ref{Cint}(0)
     ccall((:SETUPdll,"/home/aaditya/Desktop/julia/librefprop.so"),Cvoid,(Ref{Cint},Ptr{UInt8},Ptr{UInt8},Ptr{UInt8},Ref{Cint},Ptr{UInt8},Ref{Cint},Ref{Cint},Ref{Cint},Ref{Cint}), i, hf, hfmix, hrf, ierr, herr, hfld_length, refpropcharlength, lengthofreference, errormessagelength)
     return String(herr)
-end
+end #refprop_init
 """
 sample function to call the properties using pressure and enthalpy as the inputs
 """
@@ -55,9 +55,12 @@ function refprop_call(pre::Float64, enthal::Float64)
     rhov = Ref{Cdouble}(0)
     qual = Ref{Cdouble}(0)
 
-
     #ccall((:THERMdll,"/home/aaditya/Desktop/julia/librefprop.so"),Cvoid,(Ref{Cdouble}, Ref{Cdouble},Ptr{Cdouble},Ref{Cdouble},Ref{Cdouble},Ref{Cdouble},Ref{Cdouble},Ref{Cdouble},Ref{Cdouble},Ref{Cdouble},Ref{Cdouble}), temp, rhop, x, p, e, h, s, cv, cp, vs, hjt);
     ccall((:PHFLSHdll,"/home/aaditya/Desktop/julia/librefprop.so"),Cvoid,(Ref{Cdouble}, Ref{Cdouble}, Ptr{Cdouble}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cdouble}, Ref{Cint}, Ptr{UInt8}), p,h,x,temp,rhop,rhol,rhov,xliq,xvap,qual,e,s,cv,cp,vs,ierr,herr);
 
     return p[], h[]/wm[]*1000.0, temp[], rhop[]*wm[], rhol[]*wm[], rhov[]*wm[], qual[],  e[]/wm[]*1000.0, s[]/wm[]*1000.0, cv[]/wm[]*1000.0, cp[]/wm[]*1000.0, vs[]
+end #refprop_call
+
+export refprop_inti, refprop_call
+
 end # module
